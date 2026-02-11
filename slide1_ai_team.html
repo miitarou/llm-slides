@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>AI協業チーム体制</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 1920px;
+            height: 1080px;
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2744 40%, #0d2137 100%);
+            color: white;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 背景グリッド */
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        .slide {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 30px 70px;
+        }
+
+        /* タイトル */
+        .title {
+            font-size: 40px;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 6px;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .buzzwords {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .buzzwords span {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 4px 14px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.55);
+            letter-spacing: 1px;
+        }
+
+        /* メイン構成 */
+        .structure {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 人間ボックス */
+        .human-box {
+            background: linear-gradient(135deg, rgba(250, 204, 21, 0.15), rgba(245, 158, 11, 0.1));
+            border: 2px solid rgba(250, 204, 21, 0.5);
+            border-radius: 14px;
+            padding: 12px 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .human-box .role {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fbbf24;
+        }
+
+        .human-box .desc {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 4px;
+        }
+
+        .human-box .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+
+        .human-box .icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 接続矢印 */
+        .arrow-down {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .arrow-down .line {
+            width: 3px;
+            height: 14px;
+            background: linear-gradient(to bottom, rgba(96, 165, 250, 0.8), rgba(96, 165, 250, 0.3));
+        }
+
+        .arrow-down .label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            background: rgba(96, 165, 250, 0.15);
+            padding: 3px 14px;
+            border-radius: 20px;
+            margin: 2px 0;
+        }
+
+        .arrow-down .triangle {
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 12px solid rgba(96, 165, 250, 0.6);
+        }
+
+        /* メインエージェント */
+        .main-agent {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(99, 102, 241, 0.15));
+            border: 2px solid rgba(96, 165, 250, 0.6);
+            border-radius: 18px;
+            padding: 16px 50px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .main-agent .icon {
+            font-size: 34px;
+        }
+
+        .main-agent .name {
+            font-size: 26px;
+            font-weight: 900;
+            color: #93c5fd;
+            margin-top: 2px;
+        }
+
+        .main-agent .name span {
+            font-size: 18px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .main-agent .role-tag {
+            display: inline-block;
+            background: linear-gradient(90deg, #3b82f6, #6366f1);
+            font-size: 14px;
+            font-weight: 700;
+            padding: 4px 16px;
+            border-radius: 20px;
+            margin-top: 6px;
+        }
+
+        .main-agent .tasks {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            justify-content: center;
+        }
+
+        .main-agent .tasks span {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 4px 14px;
+            border-radius: 8px;
+        }
+
+        /* サブエージェント行 */
+        .sub-row {
+            display: flex;
+            gap: 60px;
+            justify-content: center;
+            margin-top: 0;
+        }
+
+        .arrow-fork {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 0;
+            position: relative;
+            height: 40px;
+            width: 700px;
+        }
+
+        .arrow-fork::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 15px;
+            background: rgba(96, 165, 250, 0.5);
+        }
+
+        .arrow-fork::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: calc(50% - 320px);
+            width: 640px;
+            height: 3px;
+            background: rgba(96, 165, 250, 0.3);
+        }
+
+        .fork-left,
+        .fork-right {
+            position: absolute;
+            bottom: 0;
+            width: 3px;
+            height: 22px;
+            background: rgba(96, 165, 250, 0.4);
+        }
+
+        .fork-left {
+            left: calc(50% - 320px);
+        }
+
+        .fork-right {
+            right: calc(50% - 320px);
+        }
+
+        .fork-tri {
+            position: absolute;
+            bottom: -8px;
+            width: 0;
+            height: 0;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-top: 10px solid rgba(96, 165, 250, 0.5);
+        }
+
+        .fork-tri.left {
+            left: calc(50% - 327px);
+        }
+
+        .fork-tri.right {
+            right: calc(50% - 327px);
+        }
+
+        .sub-agent {
+            border-radius: 16px;
+            padding: 16px 28px;
+            width: 400px;
+            position: relative;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .sub-agent.codex {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(16, 185, 129, 0.08));
+            border: 2px solid rgba(34, 197, 94, 0.4);
+        }
+
+        .sub-agent.gemini {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(139, 92, 246, 0.08));
+            border: 2px solid rgba(168, 85, 247, 0.4);
+        }
+
+        .sub-agent .header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .sub-agent .header .icon {
+            font-size: 30px;
+        }
+
+        .sub-agent .header .name {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .sub-agent.codex .header .name {
+            color: #4ade80;
+        }
+
+        .sub-agent.gemini .header .name {
+            color: #c084fc;
+        }
+
+        .sub-agent .header .tag {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 3px 12px;
+            border-radius: 20px;
+        }
+
+        .sub-agent.codex .header .tag {
+            background: rgba(34, 197, 94, 0.25);
+            color: #86efac;
+        }
+
+        .sub-agent.gemini .header .tag {
+            background: rgba(168, 85, 247, 0.25);
+            color: #d8b4fe;
+        }
+
+        .sub-agent ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sub-agent ul li {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.75);
+            padding: 3px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .sub-agent ul li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            font-size: 14px;
+        }
+
+        .sub-agent.codex ul li::before {
+            color: #4ade80;
+        }
+
+        .sub-agent.gemini ul li::before {
+            color: #c084fc;
+        }
+
+        /* メリットバー */
+        .benefits {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            align-items: center;
+        }
+
+        .benefit {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* フッター */
+        .footer {
+            margin-top: 6px;
+            text-align: center;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.25);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide">
+        <div class="title">🤖 マルチAIエージェント協業体制</div>
+        <div class="subtitle">エージェント ＋ サブエージェント構成で、一人でもチーム開発を実現</div>
+        <div class="buzzwords">
+            <span>🔌 MCP連携</span>
+            <span>🧩 AIスキル</span>
+            <span>🔄 AIワークフロー</span>
+            <span>🤖 Agent-SubAgent</span>
+            <span>🏢 Anthropic × OpenAI × Google</span>
+        </div>
+
+        <div class="structure">
+            <!-- 人間 -->
+            <div class="human-box">
+                <div class="icon"><img src="miitarou_icon.jpg" alt="河本"></div>
+                <div class="role">河本（人間）</div>
+                <div class="desc">戦略/方針決定 ・ 最終判断 ・ Antigravity/Colab実行指示</div>
+            </div>
+
+            <!-- 矢印 -->
+            <div class="arrow-down">
+                <div class="line"></div>
+                <div class="label">🗣️ 対話・指示</div>
+                <div class="line"></div>
+                <div class="triangle"></div>
+            </div>
+
+            <!-- メインエージェント -->
+            <div class="main-agent">
+                <div class="icon">🛡️</div>
+                <div class="name">Antigravity <span>(利用モデル Claude Opus / Anthropic)</span></div>
+                <div class="role-tag">メインエージェント ＝ オーケストレーター</div>
+                <div class="tasks">
+                    <span>💻 コード実装</span>
+                    <span>🧪 テスト実行</span>
+                    <span>📊 結果分析</span>
+                    <span>🔄 ワークフロー制御</span>
+                    <span>🧩 スキル活用</span>
+                </div>
+            </div>
+
+            <!-- フォーク矢印 -->
+            <div class="arrow-fork">
+                <div class="fork-left"></div>
+                <div class="fork-right"></div>
+                <div class="fork-tri left"></div>
+                <div class="fork-tri right"></div>
+            </div>
+
+            <!-- サブエージェント -->
+            <div class="sub-row">
+                <div class="sub-agent codex">
+                    <div class="header">
+                        <div class="icon">🧠</div>
+                        <div class="name">Codex (OpenAI)</div>
+                        <div class="tag">サブエージェント：参謀</div>
+                    </div>
+                    <ul>
+                        <li>CLI経由でコードレビューを自動実行</li>
+                        <li>バグ・ルール違反を事前検出</li>
+                        <li>パラメータ改善を提案</li>
+                        <li>数時間の学習ミスを数十秒で防止 ⚡</li>
+                    </ul>
+                </div>
+
+                <div class="sub-agent gemini">
+                    <div class="header">
+                        <div class="icon">🔍</div>
+                        <div class="name">Gemini CLI (Google)</div>
+                        <div class="tag">サブエージェント：監査</div>
+                    </div>
+                    <ul>
+                        <li>独立した視点で戦略を検証</li>
+                        <li>Codexとは異なる視点でリスクを指摘</li>
+                        <li>レギュレーション違反を監査</li>
+                        <li>AI合議で多角的に意思決定 🤔</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- メリット -->
+        <div class="benefits">
+            <div class="benefit">🔄 異なるAIの視点で盲点をカバー</div>
+            <div class="benefit">✅ レビュー必須フローで品質を担保</div>
+            <div class="benefit">💪 一人の開発でもチーム体制を実現</div>
+            <div class="benefit">⚡ レビュー数十秒で学習ミス（数時間）を防止</div>
+        </div>
+    </div>
+
+
+    <div class="footer">MCP連携 × AIスキル × 定義済みワークフロー × 3社のAIエージェント → 個人開発に「AIチーム」を実装</div>
+    </div>
+</body>
+
+</html>

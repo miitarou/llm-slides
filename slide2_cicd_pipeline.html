@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>CI/CD自動化パイプライン</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 1920px;
+            height: 1080px;
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #0a1a2e 0%, #0f2027 30%, #1a2744 100%);
+            color: white;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.05) 0%, transparent 60%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
+
+        .slide {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 22px 60px;
+        }
+
+        .title {
+            font-size: 36px;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 2px;
+            background: linear-gradient(90deg, #06b6d4, #22d3ee, #67e8f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 2px;
+        }
+
+        .context {
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .cycle-wrap {
+            position: relative;
+            width: 1300px;
+            height: 820px;
+            margin: 0 auto;
+        }
+
+        .center-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+        }
+
+        .center-label .icon {
+            font-size: 44px;
+        }
+
+        .center-label .text {
+            font-size: 17px;
+            font-weight: 900;
+            color: #22d3ee;
+            margin-top: 2px;
+        }
+
+        .center-label .sub {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.35);
+            margin-top: 2px;
+        }
+
+        @keyframes spin {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 540px;
+            height: 540px;
+            border: 2px dashed rgba(6, 182, 212, 0.12);
+            border-radius: 50%;
+            animation: spin 40s linear infinite;
+            z-index: 0;
+        }
+
+        .node {
+            position: absolute;
+            width: 230px;
+            border-radius: 14px;
+            padding: 12px 14px;
+            z-index: 5;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .node .node-icon {
+            font-size: 22px;
+            margin-bottom: 2px;
+        }
+
+        .node .node-title {
+            font-size: 14px;
+            font-weight: 900;
+            margin-bottom: 2px;
+        }
+
+        .node .node-desc {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.4;
+        }
+
+        .node .node-tag {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-top: 3px;
+        }
+
+        .node.ai {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(99, 102, 241, 0.1));
+            border: 2px solid rgba(96, 165, 250, 0.45);
+        }
+
+        .node.ai .node-title {
+            color: #93c5fd;
+        }
+
+        .node.ai .node-tag {
+            background: rgba(96, 165, 250, 0.2);
+            color: #93c5fd;
+        }
+
+        .node.auto {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(16, 185, 129, 0.08));
+            border: 2px solid rgba(34, 197, 94, 0.45);
+        }
+
+        .node.auto .node-title {
+            color: #86efac;
+        }
+
+        .node.auto .node-tag {
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+        }
+
+        .node.watch {
+            background: linear-gradient(135deg, rgba(250, 204, 21, 0.12), rgba(245, 158, 11, 0.08));
+            border: 2px solid rgba(250, 204, 21, 0.4);
+        }
+
+        .node.watch .node-title {
+            color: #fde68a;
+        }
+
+        .node.watch .node-tag {
+            background: rgba(250, 204, 21, 0.2);
+            color: #fde68a;
+        }
+
+        /* 7角形配置 */
+        .node.pos1 {
+            top: 5px;
+            left: 530px;
+        }
+
+        /* 上 */
+        .node.pos2 {
+            top: 120px;
+            left: 900px;
+        }
+
+        /* 右上 */
+        .node.pos3 {
+            top: 370px;
+            left: 990px;
+        }
+
+        /* 右 */
+        .node.pos4 {
+            top: 610px;
+            left: 820px;
+        }
+
+        /* 右下 */
+        .node.pos5 {
+            top: 650px;
+            left: 260px;
+        }
+
+        /* 左下 */
+        .node.pos6 {
+            top: 370px;
+            left: 70px;
+        }
+
+        /* 左 */
+        .node.pos7 {
+            top: 120px;
+            left: 170px;
+        }
+
+        /* 左上 */
+
+        .arrows-svg {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.22);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide">
+        <div class="title">⚡ 個人開発でもCI/CD ～ Colab自動化パイプライン～</div>
+        <div class="subtitle">修正 → Push → 検知 → 実行 → 状況出力 → 監視 → 分析 → 修正 … のサイクルを自動化</div>
+        <div class="context">💡 背景：ML環境は頻繁なライブラリ更新や依存関係の変化でエラーが多発 → 手動対応では限界があり、自動化パイプラインを構築</div>
+
+        <div class="cycle-wrap">
+            <div class="ring"></div>
+
+            <div class="center-label">
+                <div class="icon">🔄</div>
+                <div class="text">自動化サイクル</div>
+                <div class="sub">人手を介さず回り続ける</div>
+            </div>
+
+            <!-- SVG矢印（7ステップ循環） -->
+            <svg class="arrows-svg" viewBox="0 0 1300 820" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- ①→② -->
+                <path d="M 760 65 Q 860 50, 910 115" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none" />
+                <polygon points="904,113 916,113 910,127" fill="rgba(6,182,212,0.55)" />
+                <!-- ②→③ -->
+                <path d="M 1060 230 Q 1100 290, 1080 370" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none" />
+                <polygon points="1074,368 1086,368 1080,382" fill="rgba(6,182,212,0.55)" />
+                <!-- ③→④ -->
+                <path d="M 1080 480 Q 1050 560, 980 610" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none" />
+                <polygon points="982,606 982,618 968,612" fill="rgba(6,182,212,0.55)" />
+                <!-- ④→⑤ -->
+                <path d="M 820 680 Q 660 720, 490 680" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none" />
+                <polygon points="492,674 492,686 478,680" fill="rgba(6,182,212,0.55)" />
+                <!-- ⑤→⑥ -->
+                <path d="M 270 650 Q 180 570, 180 480" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none" />
+                <polygon points="174,482 186,482 180,468" fill="rgba(6,182,212,0.55)" />
+                <!-- ⑥→⑦ -->
+                <path d="M 200 370 Q 190 280, 240 200" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none" />
+                <polygon points="234,202 246,202 240,188" fill="rgba(6,182,212,0.55)" />
+                <!-- ⑦→① ループ完成 -->
+                <path d="M 390 130 Q 460 60, 540 45" stroke="rgba(34,197,94,0.5)" stroke-width="3" fill="none" />
+                <polygon points="538,39 538,51 552,45" fill="rgba(34,197,94,0.65)" />
+            </svg>
+
+            <!-- ① Antigravity 実装 & Colabノート作成/修正 -->
+            <div class="node ai pos1">
+                <div class="node-icon">🤖</div>
+                <div class="node-title">① Antigravity 実装 & Colabノート作成/修正</div>
+                <div class="node-desc">コード実装・Colabノートブックを作成・修正</div>
+                <div class="node-tag">AIエージェント</div>
+            </div>
+
+            <!-- ② Antigravity GitHub Push -->
+            <div class="node ai pos2">
+                <div class="node-icon">🐙</div>
+                <div class="node-title">② Antigravity → GitHub Push</div>
+                <div class="node-desc">変更を自動コミット&プッシュ</div>
+                <div class="node-tag">AIエージェント</div>
+            </div>
+
+            <!-- ③ Colab GitHub変更を検知 -->
+            <div class="node auto pos3">
+                <div class="node-icon">🔔</div>
+                <div class="node-title">③ Colab GitHub変更を検知</div>
+                <div class="node-desc">Papermillドライバーが<br>リポジトリの変更を自動検知</div>
+                <div class="node-tag">Papermill自動検知</div>
+            </div>
+
+            <!-- ④ GPU接続・依存解決・Drive接続・ML実行 -->
+            <div class="node auto pos4">
+                <div class="node-icon">⚡</div>
+                <div class="node-title">④ 環境構築 & ML実行</div>
+                <div class="node-desc">GPU接続確認・ライブラリ依存解決<br>Google Drive自動接続・ML学習実行</div>
+                <div class="node-tag">自動実行</div>
+            </div>
+
+            <!-- ⑤ 実行状況をGoogle Driveへ出力 -->
+            <div class="node auto pos5">
+                <div class="node-icon">📁</div>
+                <div class="node-title">⑤ 実行状況をGoogle Driveへ出力</div>
+                <div class="node-desc">60秒間隔で実行ログ・状況を<br>Driveに定期保存</div>
+                <div class="node-tag">定期保存（60秒間隔）</div>
+            </div>
+
+            <!-- ⑥ ハートビート監視 -->
+            <div class="node watch pos6">
+                <div class="node-icon">💓</div>
+                <div class="node-title">⑥ ハートビート監視</div>
+                <div class="node-desc">実行状態を定期チェック<br>異常停止・エラーを即座に検知</div>
+                <div class="node-tag">死活監視</div>
+            </div>
+
+            <!-- ⑦ Antigravity エラーログ分析 & 原因特定 -->
+            <div class="node ai pos7">
+                <div class="node-icon">🔍</div>
+                <div class="node-title">⑦ Antigravity 終了判定 & ログ分析</div>
+                <div class="node-desc">正常終了 → 結果回収・次ステップへ<br>エラー → 原因特定・修正立案 → ①へ</div>
+                <div class="node-tag">AI分析 & 判定</div>
+            </div>
+        </div>
+
+        <div class="footer">Papermill × Google Drive × GitHub × AIエージェント ＝ 個人でもCI/CDを実現する自動改善ループ 🔄</div>
+    </div>
+</body>
+
+</html>
