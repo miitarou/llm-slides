@@ -84,19 +84,19 @@
         }
 
         .center-label .icon {
-            font-size: 44px;
+            font-size: 40px;
         }
 
         .center-label .text {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 900;
             color: #22d3ee;
             margin-top: 2px;
         }
 
         .center-label .sub {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.35);
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
             margin-top: 2px;
         }
 
@@ -114,9 +114,9 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 540px;
-            height: 540px;
-            border: 2px dashed rgba(6, 182, 212, 0.12);
+            width: 480px;
+            height: 480px;
+            border: 2px dashed rgba(6, 182, 212, 0.1);
             border-radius: 50%;
             animation: spin 40s linear infinite;
             z-index: 0;
@@ -124,35 +124,36 @@
 
         .node {
             position: absolute;
-            width: 230px;
+            width: 210px;
             border-radius: 14px;
-            padding: 12px 14px;
+            padding: 10px 12px;
             z-index: 5;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .node .node-icon {
-            font-size: 22px;
-            margin-bottom: 2px;
+            font-size: 20px;
+            margin-bottom: 1px;
         }
 
         .node .node-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 900;
             margin-bottom: 2px;
+            line-height: 1.3;
         }
 
         .node .node-desc {
-            font-size: 11px;
+            font-size: 10px;
             color: rgba(255, 255, 255, 0.5);
             line-height: 1.4;
         }
 
         .node .node-tag {
             display: inline-block;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 700;
-            padding: 2px 8px;
+            padding: 2px 7px;
             border-radius: 10px;
             margin-top: 3px;
         }
@@ -199,49 +200,49 @@
             color: #fde68a;
         }
 
-        /* 7角形配置 */
+        /* 正七角形配置 - 中心(650,410) 半径300 */
         .node.pos1 {
-            top: 5px;
-            left: 530px;
+            top: 60px;
+            left: 545px;
         }
 
-        /* 上 */
+        /* 0° 上 */
         .node.pos2 {
-            top: 120px;
-            left: 900px;
+            top: 170px;
+            left: 770px;
         }
 
-        /* 右上 */
+        /* 51.4° 右上 */
         .node.pos3 {
-            top: 370px;
-            left: 990px;
+            top: 410px;
+            left: 830px;
         }
 
-        /* 右 */
+        /* 102.9° 右 */
         .node.pos4 {
             top: 610px;
-            left: 820px;
+            left: 665px;
         }
 
-        /* 右下 */
+        /* 154.3° 右下 */
         .node.pos5 {
-            top: 650px;
-            left: 260px;
+            top: 610px;
+            left: 395px;
         }
 
-        /* 左下 */
+        /* 205.7° 左下 */
         .node.pos6 {
-            top: 370px;
-            left: 70px;
+            top: 410px;
+            left: 250px;
         }
 
-        /* 左 */
+        /* 257.1° 左 */
         .node.pos7 {
-            top: 120px;
-            left: 170px;
+            top: 170px;
+            left: 305px;
         }
 
-        /* 左上 */
+        /* 308.6° 左上 */
 
         .arrows-svg {
             position: absolute;
@@ -277,29 +278,37 @@
                 <div class="sub">人手を介さず回り続ける</div>
             </div>
 
-            <!-- SVG矢印（7ステップ循環） -->
+            <!-- SVG矢印（正七角形に沿った円弧） -->
             <svg class="arrows-svg" viewBox="0 0 1300 820" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <marker id="ah" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+                        <path d="M0,0 L10,4 L0,8 Z" fill="rgba(6,182,212,0.6)" />
+                    </marker>
+                    <marker id="ah-green" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+                        <path d="M0,0 L10,4 L0,8 Z" fill="rgba(34,197,94,0.7)" />
+                    </marker>
+                </defs>
                 <!-- ①→② -->
-                <path d="M 760 65 Q 860 50, 910 115" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none" />
-                <polygon points="904,113 916,113 910,127" fill="rgba(6,182,212,0.55)" />
+                <path d="M 725,130 A 300,300 0 0,1 822,177" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none"
+                    marker-end="url(#ah)" />
                 <!-- ②→③ -->
-                <path d="M 1060 230 Q 1100 290, 1080 370" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none" />
-                <polygon points="1074,368 1086,368 1080,382" fill="rgba(6,182,212,0.55)" />
+                <path d="M 916,294 A 300,300 0 0,1 940,399" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none"
+                    marker-end="url(#ah)" />
                 <!-- ③→④ -->
-                <path d="M 1080 480 Q 1050 560, 980 610" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none" />
-                <polygon points="982,606 982,618 968,612" fill="rgba(6,182,212,0.55)" />
+                <path d="M 906,546 A 300,300 0 0,1 840,630" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none"
+                    marker-end="url(#ah)" />
                 <!-- ④→⑤ -->
-                <path d="M 820 680 Q 660 720, 490 680" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none" />
-                <polygon points="492,674 492,686 478,680" fill="rgba(6,182,212,0.55)" />
+                <path d="M 704,696 A 300,300 0 0,1 596,696" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none"
+                    marker-end="url(#ah)" />
                 <!-- ⑤→⑥ -->
-                <path d="M 270 650 Q 180 570, 180 480" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none" />
-                <polygon points="174,482 186,482 180,468" fill="rgba(6,182,212,0.55)" />
+                <path d="M 460,630 A 300,300 0 0,1 394,546" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none"
+                    marker-end="url(#ah)" />
                 <!-- ⑥→⑦ -->
-                <path d="M 200 370 Q 190 280, 240 200" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none" />
-                <polygon points="234,202 246,202 240,188" fill="rgba(6,182,212,0.55)" />
-                <!-- ⑦→① ループ完成 -->
-                <path d="M 390 130 Q 460 60, 540 45" stroke="rgba(34,197,94,0.5)" stroke-width="3" fill="none" />
-                <polygon points="538,39 538,51 552,45" fill="rgba(34,197,94,0.65)" />
+                <path d="M 360,399 A 300,300 0 0,1 384,294" stroke="rgba(6,182,212,0.4)" stroke-width="2.5" fill="none"
+                    marker-end="url(#ah)" />
+                <!-- ⑦→① ループ完成（緑色） -->
+                <path d="M 478,177 A 300,300 0 0,1 575,130" stroke="rgba(34,197,94,0.5)" stroke-width="3" fill="none"
+                    marker-end="url(#ah-green)" />
             </svg>
 
             <!-- ① Antigravity 実装 & Colabノート作成/修正 -->
@@ -326,7 +335,7 @@
                 <div class="node-tag">Papermill自動検知</div>
             </div>
 
-            <!-- ④ GPU接続・依存解決・Drive接続・ML実行 -->
+            <!-- ④ 環境構築 & ML実行 -->
             <div class="node auto pos4">
                 <div class="node-icon">⚡</div>
                 <div class="node-title">④ 環境構築 & ML実行</div>
@@ -350,7 +359,7 @@
                 <div class="node-tag">死活監視</div>
             </div>
 
-            <!-- ⑦ Antigravity エラーログ分析 & 原因特定 -->
+            <!-- ⑦ Antigravity 終了判定 & ログ分析 -->
             <div class="node ai pos7">
                 <div class="node-icon">🔍</div>
                 <div class="node-title">⑦ Antigravity 終了判定 & ログ分析</div>
